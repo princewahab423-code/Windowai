@@ -1,0 +1,29 @@
+# Window AI — Cloudflare Worker (frontend + API in one) with D1 database.
+name = "window-ai"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Serves public/index.html. Requests to /api/* go to the Worker code.
+[assets]
+directory = "./public"
+binding = "ASSETS"
+
+# 1) Create it:  npx wrangler d1 create window-ai-db   2) paste the printed database_id below
+[[d1_databases]]
+binding = "DB"
+database_name = "window-ai-db"
+database_id = "PASTE_YOUR_D1_DATABASE_ID"
+
+# ── PUBLIC settings only (safe to be visible). NEVER put API keys or secrets here. ──
+[vars]
+GOOGLE_CLIENT_ID = "PASTE_YOUR_GOOGLE_OAUTH_CLIENT_ID_HERE"
+CAPTCHA_PROVIDER = "turnstile"
+CAPTCHA_SITE_KEY = "PASTE_YOUR_TURNSTILE_SITE_KEY_HERE"
+STARTER_TOKENS = "100000"
+SESSION_TTL_DAYS = "30"
+# Only needed if the page is hosted on ANOTHER domain (e.g. Blogger). Comma separated, no trailing slash.
+ALLOWED_ORIGINS = ""
+
+# ── SECRETS (set with `npx wrangler secret put NAME` or Dashboard → Worker → Settings → Variables and Secrets → Secret) ──
+#   CAPTCHA_SECRET_KEY   GEMINI_API_KEY   GROK_API_KEY   MISTRAL_API_KEY
+#   NVIDIA_API_KEY       COHERE_API_KEY   SAMBANOVA_API_KEY   ADMIN_TOKEN (optional)
